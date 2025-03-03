@@ -1,3 +1,7 @@
 streamlit
 imapclient
-email
+requests
+msal
+pandas
+msal-extensions
+plotly
