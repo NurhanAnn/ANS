@@ -113,22 +113,33 @@ with tab1:
                     subscriptions = get_subscriptions(st.session_state.account_uuid, st.session_state.dt_access_token)
                     # print("\nsubscriptions")
                     # print(subscriptions)
-                    if subscriptions:
-                        st.subheader("📑 Active Subscriptions")
+                    # if subscriptions:
+                    #     st.subheader("📑 Active Subscriptions")
                         
-                        # Create DataFrame from subscriptions
-                        subs_df = pd.DataFrame(subscriptions)
-                        subs_df = subs_df[['name', 'startTime', 'endTime', 'status']]
-                        subs_df['startTime'] = pd.to_datetime(subs_df['startTime']).dt.date
-                        subs_df['endTime'] = pd.to_datetime(subs_df['endTime']).dt.date
+                    #     # Create DataFrame from subscriptions
+                    #     subs_df = pd.DataFrame(subscriptions)
+                    #     subs_df = subs_df[['name', 'startTime', 'endTime', 'status']]
+                    #     subs_df['startTime'] = pd.to_datetime(subs_df['startTime']).dt.date
+                    #     subs_df['endTime'] = pd.to_datetime(subs_df['endTime']).dt.date
                         
-                        # Display subscriptions table
-                        st.dataframe(subs_df, use_container_width=True)
+                    #     # Display subscriptions table
+                    #     st.dataframe(subs_df, use_container_width=True)
 
         # Fetch subscriptions
         if st.session_state.dt_access_token:
             subscriptions = get_subscriptions(st.session_state.account_uuid, st.session_state.dt_access_token)
             if subscriptions:
+                st.subheader("📑 Active Subscriptions")
+                
+                # Create DataFrame from subscriptions
+                subs_df = pd.DataFrame(subscriptions)
+                subs_df = subs_df[['name', 'startTime', 'endTime', 'status']]
+                subs_df['startTime'] = pd.to_datetime(subs_df['startTime']).dt.date
+                subs_df['endTime'] = pd.to_datetime(subs_df['endTime']).dt.date
+                
+                # Display subscriptions table
+                st.dataframe(subs_df, use_container_width=True)
+                
                 # Add selection dropdown
                 subscription_options = {sub['name']: sub for sub in subscriptions}
                 selected_subscription_name = st.selectbox("Select a Subscription:",

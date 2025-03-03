@@ -1,7 +1,5 @@
 # Automated Notify System 🔔
 
-![Python](https://img.shields.io/badge/python-3.9%2B-blue)
-
 A comprehensive automation platform integrating email processing and Dynatrace license management with real-time dashboards.
 
 ## Features ✨
