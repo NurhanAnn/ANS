@@ -29,6 +29,11 @@ with tab1:
     if "emails_fetched" not in st.session_state:
         st.session_state.emails_fetched = False
 
+    # Prompt the user to select a date (we'll use only the month and year)
+    selected_date = st.date_input("Select a month and year", value=datetime.today())
+    selected_month = selected_date.month
+    selected_year = selected_date.year
+
     # Fetch emails button
     if st.button("Fetch Emails"):
         st.session_state.access_token = get_access_token()
@@ -42,7 +47,7 @@ with tab1:
 
     # Display email attachments if available
     if st.session_state.emails_fetched and st.session_state.access_token:
-        df = fetch_email_attachments(st.session_state.access_token)
+        df = fetch_email_attachments(st.session_state.access_token, selected_month, selected_year)
         if not df.empty:
             # Filtering options
             senders = df["Sender"].unique()
@@ -335,9 +340,9 @@ with tab1:
                 default_body = f"""
                 <p>Dear Client,</p>
                 <p>This is a notification regarding your current and forecasted Dynatrace subscription usage.</p>
-                <p><strong>Current Usage:</strong>RM {current_usage}</p>
-                <p><strong>Forecasted Usage:</strong>RM {forecasted_usage}</p>
-                <p><strong>From total budget:</strong>RM {budget}</p>
+                <p><strong>Current Usage:</strong>RM {current_usage:.2f}</p>
+                <p><strong>Forecasted Usage:</strong>RM {forecasted_usage:.2f}</p>
+                <p><strong>From total budget:</strong>RM {budget:.2f}</p>
                 <p>If you have any questions or need further assistance, please contact us.</p>
                 <p>Best regards,<br>Core Consulting Sdn Bhd</p>
                 """

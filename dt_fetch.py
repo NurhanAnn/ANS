@@ -14,6 +14,7 @@ def get_dynatrace_access_token(client_id, client_secret):
     }
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     response = requests.post(url, data=payload, headers=headers)
+    print(response.json())
     if response.status_code == 200:
         return response.json().get('access_token')
     else:
@@ -26,6 +27,8 @@ def fetch_forecasted_budget(access_token, account_uuid):
     url = f"https://api.dynatrace.com/sub/v2/accounts/{account_uuid_split}/subscriptions/forecast"
     headers = {'Authorization': f'Bearer {access_token}'}
     response = requests.get(url, headers=headers)
+    print("\nForecasted Budget Data: \n")
+    print(response.json())
     if response.status_code == 200:
         return response.json()
     else:
@@ -40,6 +43,8 @@ def get_subscriptions(account_uuid, token):
         'Authorization': f'Bearer {token}'
     }
     response = requests.get(url, headers=headers)
+    print("\nSubscriptions: \n")
+    print(response.json())
     if response.status_code == 200:
         return response.json().get('data', [])
     else:
