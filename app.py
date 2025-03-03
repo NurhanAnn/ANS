@@ -139,7 +139,7 @@ with tab1:
                 
                 # Display subscriptions table
                 st.dataframe(subs_df, use_container_width=True)
-                
+
                 # Add selection dropdown
                 subscription_options = {sub['name']: sub for sub in subscriptions}
                 selected_subscription_name = st.selectbox("Select a Subscription:",
@@ -177,7 +177,7 @@ with tab1:
                     progress = min(max(elapsed_days / total_days, 0), 1)  # Clamp between 0 and 1
                     
                     st.progress(progress)
-                    st.caption(f"{int(progress * 100)}% of subscription period elapsed")
+                    st.caption(f"{elapsed_days} out of {total_days} days of subscription period elapsed. {int(progress * 100)}")
 
                     # Fetch and display forecasted budget automatically
                     if st.session_state.account_uuid:
