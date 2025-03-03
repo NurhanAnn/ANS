@@ -56,7 +56,13 @@ def get_access_token():
 def fetch_email_attachments(access_token, month, year):
     """
     Fetches emails and their attachments from the inbox for the specified month and year using the Microsoft Graph API.
+    Results are cached in session state to prevent repeated fetching.
     """
+    # Check if we already have cached results
+    cache_key = f"email_attachments_{year}_{month}"
+    if cache_key in st.session_state:
+        return st.session_state[cache_key]
+
     # Calculate the start and end dates for the selected month
     start_date = datetime(year, month, 1).strftime('%Y-%m-%dT%H:%M:%SZ')
     if month == 12:
@@ -69,7 +75,7 @@ def fetch_email_attachments(access_token, month, year):
     headers = {"Authorization": f"Bearer {access_token}"}
     data = []
 
-    while url:
+    if url:
         response = requests.get(url, headers=headers)
 
         if response.status_code == 200:
@@ -98,19 +104,23 @@ def fetch_email_attachments(access_token, month, year):
                         "Day": day,
                         "Subject": subject
                     })
-
+            
             # Check if there's another page of data
             url = result.get("@odata.nextLink")
         else:
             st.error(f"Error fetching emails: {response.json()}")
-            break
+            
 
-    return pd.DataFrame(data)
+    # Store results in cache and return
+    df = pd.DataFrame(data)
+    st.session_state[cache_key] = df
+    return df
 
 def clear_cache():
     """Clear the token cache and reset session state."""
     if os.path.exists(CACHE_PATH):
         os.remove(CACHE_PATH)
+        app.remove_account(account=app.get_accounts())
         print("\nCache cleared.")
     for key in st.session_state.keys():
         del st.session_state[key]
