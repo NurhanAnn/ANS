@@ -332,12 +332,15 @@ def highlight_reports(val, expected):
     val = int(val)
     expected = int(expected)
     if val == 0:
-        color = '#FFD6C9'
+        bg_color = '#FFD6C9'
+        text_color = '#D45D42'  # Darker red
     elif val < expected:
-        color = '#FFF8B8'
+        bg_color = '#FFF8B8'
+        text_color = '#D4B300'  # Darker yellow
     else:
-        color = '#E0FFCC'
-    return f'background-color: {color}; color: black'
+        bg_color = '#E0FFCC'
+        text_color = '#4CAF50'  # Darker green
+    return f'background-color: {bg_color}; color: {text_color}'
 
 def highlight_days_remaining(val):
     try:
