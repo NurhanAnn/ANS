@@ -543,39 +543,41 @@ def show_dynatrace_tab():
         st.exception(e)
 
 
-    st.write("## Cost Details")
+    if not client_summary_df.empty:
+        st.write("## Cost Details")
 
-    # Select client from unique names
-    chosen_client = st.selectbox("Select client", client_summary_df['Client Name'].unique())
+        # Select client from unique names
+        chosen_client = st.selectbox("Select client", client_summary_df['Client Name'].unique())
 
-    # Filter the DataFrame for the chosen client
-    filtered_df = client_summary_df[client_summary_df['Client Name'] == chosen_client]
+        # Filter the DataFrame for the chosen client
+        filtered_df = client_summary_df[client_summary_df['Client Name'] == chosen_client]
 
-    if not filtered_df.empty:
-        row = filtered_df.iloc[0]
-        cost_details = None  # Default value
+        if not filtered_df.empty:
+            row = filtered_df.iloc[0]
+            cost_details = None  # Default value
 
-        if row['License Type'] in ["SaaS DPS", "Managed DPS"]:
-            cost_details = row['Cost Details']
+            if row['License Type'] in ["SaaS DPS", "Managed DPS"]:
+                cost_details = row['Cost Details']
 
-        elif row['License Type'] in ["SaaS Classic", "Managed Classic"]:
-            # Compile quotas into a structured DataFrame
-            cost_details = pd.DataFrame({
-                "Quotas": ["Host", "DEM", "Davis"],
-                "Usage": [row.get('Host Usage', 0), row.get('DEM Usage', 0), row.get('Davis Usage', 0)],
-                "Limit": [row.get('Host Limit', 0), row.get('DEM Limit', 0), row.get('Davis Limit', 0)]
-            })
+            elif row['License Type'] in ["SaaS Classic", "Managed Classic"]:
+                # Compile quotas into a structured DataFrame
+                cost_details = pd.DataFrame({
+                    "Quotas": ["Host", "DEM", "Davis"],
+                    "Usage": [row.get('Host Usage', 0), row.get('DEM Usage', 0), row.get('Davis Usage', 0)],
+                    "Limit": [row.get('Host Limit', 0), row.get('DEM Limit', 0), row.get('Davis Limit', 0)]
+                })
 
-        # Display the cost details if available
-        if cost_details is not None:
-            if isinstance(cost_details, pd.DataFrame):
-                st.dataframe(cost_details, use_container_width=True, hide_index=True)
-            else:
-                flattened_df = pd.json_normalize(cost_details)
-                st.dataframe(flattened_df, use_container_width=True, hide_index=True)
-
+            # Display the cost details if available
+            if cost_details is not None:
+                if isinstance(cost_details, pd.DataFrame):
+                    st.dataframe(cost_details, use_container_width=True, hide_index=True)
+                else:
+                    flattened_df = pd.json_normalize(cost_details)
+                    st.dataframe(flattened_df, use_container_width=True, hide_index=True)
+        else:
+            st.write("Details are not available for this account.")
     else:
-        st.write("Details are not available for this account.")
+        st.warning("Client summary data is unavailable.")
 
     # Email Notification Section
     with st.expander("📧 Send License Expiry Notifications", expanded=True):
