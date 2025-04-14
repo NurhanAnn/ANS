@@ -337,7 +337,7 @@ def highlight_reports(val, expected):
         color = '#FFF8B8'
     else:
         color = '#E0FFCC'
-    return f'background-color: {color}'
+    return f'background-color: {color}; color: black'
 
 def highlight_days_remaining(val):
     try:
