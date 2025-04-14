@@ -543,9 +543,9 @@ def show_dynatrace_tab():
         st.exception(e)
 
 
-    if not client_summary_df.empty:
-        st.write("## Cost Details")
+    st.write("## Cost Details")
 
+    if not client_summary_df.empty:
         # Select client from unique names
         chosen_client = st.selectbox("Select client", client_summary_df['Client Name'].unique())
 
